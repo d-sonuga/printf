@@ -17,6 +17,7 @@ int print_unsigned(va_list types, char outputbuffer[], int flags, int width, int
 
 	num = convert_size_unsgnd(num, size);
 	if (num == 0)
+	{
 		outputbuffer[i--] = '0';
 		outputbuffer[BUFF_SIZE - 1] = '\0';
 		while (num > 0)
@@ -25,8 +26,9 @@ int print_unsigned(va_list types, char outputbuffer[], int flags, int width, int
 			num /= 10;
 			}
 			i++;
-			return (write_unsgnd(0, i, outputbuffer, flags, width, precision, size));
-			}
+	}
+	return (write_unsgnd(0, i, outputbuffer, flags, width, precision, size));
+}
 /**
 * print_octal - Prints an unsigned number in octal notation
 * @types: List of arguments
@@ -45,17 +47,23 @@ int print_octal(va_list types, char outputbuffer[], int flags, int width, int pr
 
 	UNUSED(width);
 	num = convert_size_unsgnd(num, size);
+	/* Added curly braces to surround the code under this if statement */
 	if (num == 0)
+	{
 		outputbuffer[i--] = '0';
 		outputbuffer[BUFF_SIZE - 1] = '\0';
 		while (num > 0)
+		{
 			outputbuffer[i--] = (num % 8) + '0';
 			num /= 8;
-			}
+			
 			if (flags & F_HASH && init_num != 0)
 				outputbuffer[i--] = '0';
-				i++;
-				return (write_unsgnd(0, i, outputbuffer, flags, width, precision, size));
+			i++;
+		}
+	}
+	return (write_unsgnd(0, i, outputbuffer, flags, width, precision, size));
+}
 /**
 * print_hexadecimal - Prints an unsigned number in hexadecimal notation
 * @types: List of arguments

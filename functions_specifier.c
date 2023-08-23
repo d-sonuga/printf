@@ -24,24 +24,26 @@ int print_pointer(va_list types, char outputbuffer[], int flags, int width, int 
 	UNUSED(size);
 	if (addrs == NULL)
 		return (write(1, "(nil)", 5));
-		outputbuffer[BUFF_SIZE - 1] = '\0';
-		UNUSED(precision);
-		num_addrs = (unsigned long)addrs;
-		while (num_addrs > 0)
+	outputbuffer[BUFF_SIZE - 1] = '\0';
+	UNUSED(precision);
+	num_addrs = (unsigned long)addrs;
+	while (num_addrs > 0)
+	{
+		outputbuffer[ind--] = map_to[num_addrs % 16];
+		num_addrs /= 16;
+		length++;
+		if ((flags & F_ZERO) && !(flags & F_MINUS))
 		{
-			outputbuffer[ind--] = map_to[num_addrs % 16];
-			num_addrs /= 16;
-			length++;
-			}
-			if ((flags & F_ZERO) && !(flags & F_MINUS))
-				padd = '0';
-				if (flags & F_PLUS)
-					extra_c = '+', length++;
-					else if (flags & F_SPACE)
-						extra_c = ' ', length++;
-						ind++;
-						return (write_pointer(outputbuffer, ind, length, width, flags, padd, extra_c, padd_start));
-						}
+			padd = '0';
+			if (flags & F_PLUS)
+				extra_c = '+', length++;
+			else if (flags & F_SPACE)
+				extra_c = ' ', length++;
+			ind++;
+		}
+	}
+	return (write_pointer(outputbuffer, ind, length, width, flags, padd, extra_c, padd_start));
+}
 /*PRINT NON PRINTABLE*/
 /**
 * print_non_printable - Prints ASCII codes in hexa of non printable character
@@ -64,17 +66,17 @@ int print_non_printable(va_list types, char outputbuffer[], int flags, int width
 	UNUSED(size);
 	if (str == NULL)
 		return (write(1, "(null)", 6));
-		while (str[i] != '\0')
-		{
-			if (is_printable(str[i]))
-				outputbuffer[i + offset] = str[i];
-				else
-					offset += append_hexa_code(str[i], outputbuffer, i + offset);
-					i++;
-					}
-					outputbuffer[i + offset] = '\0';
-					return (write(1, outputbuffer, i + offset));
-					}
+	while (str[i] != '\0')
+	{
+		if (is_printable(str[i]))
+			outputbuffer[i + offset] = str[i];
+		else
+			offset += append_hexa_code(str[i], outputbuffer, i + offset);
+		i++;
+	}
+	outputbuffer[i + offset] = '\0';
+	return (write(1, outputbuffer, i + offset));
+}
 /* Rest of the functions */
 
 /**
@@ -86,5 +88,5 @@ void print_output_buffer(char outputbuffer[], int *output_buff_ind)
 {
 	if (*output_buff_ind > 0)
 		write(1, &outputbuffer[0], *output_buff_ind);
-		*output_buff_ind = 0;
-		}
+	*output_buff_ind = 0;
+}

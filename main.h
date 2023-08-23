@@ -55,4 +55,9 @@ int is_printable(char c);
 int append_hexa_code(char c, char buffer[], int index);
 int is_digit(char c);
 
+/* Added this so that the printable.c errors will be resolved. */
+int write_unsgnd(int is_negative, int ind, char outputbuffer[], int flags, int width, int precision, int size);
+
+int write_pointer(char outputbuffer[], int ind, int length, int width, int flags, char padd, char extra_c, int padd_start);
+
 #endif /* MAIN_H */
